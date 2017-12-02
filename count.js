@@ -38,10 +38,16 @@ var particularLetterCount = 0;
 var chapterNumber = 0;
 var chapterList = [];
 var index = 0;
-while (index < lineList.length) {
+while (true) {
     var line = lineList[index];
-    index += 1;
-    if (line.indexOf("CHAPTER") >= 0 || index >= lineList.length) {
+    var isLastLine = (index >= lineList.length - 1);
+    var isChapterHeader = (line.indexOf("CHAPTER") >= 0);
+    if (!isChapterHeader) {
+        var result = countLetters(line);
+        letterCount += result.letterCount;
+        particularLetterCount += result.particularLetterCount;
+    }
+    if (isChapterHeader || isLastLine) {
         if (chapterNumber >= 1) {
             chapterList.push({
                 chapterNumber: chapterNumber,
@@ -51,11 +57,11 @@ while (index < lineList.length) {
         chapterNumber += 1;
         letterCount = 0;
         particularLetterCount = 0;
-    } else {
-        var result = countLetters(line);
-        letterCount += result.letterCount;
-        particularLetterCount += result.particularLetterCount;
     }
+    if (isLastLine) {
+        break;
+    }
+    index += 1;
 }
 
 var lineList = ["Chapter Number,Letter " + particularLetter + " Percentage"];
